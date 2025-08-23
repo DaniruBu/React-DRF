@@ -7,7 +7,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = str(os.environ.get('ALLOWED_HOSTS')).split(' ')
 
 
 # Application definition
@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    ## apps
+    'apps.accounts',
 ]
 
 MIDDLEWARE = [
@@ -102,3 +104,5 @@ STATIC_URL = 'static/'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.User'
