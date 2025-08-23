@@ -1,0 +1,41 @@
+services:
+  backend:
+    container_name: backend
+    build: 
+      context: ./backend
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    command: sh runserver.sh
+    depends_on:
+      - database
+    restart: unless-stopped
+    networks:
+      - service-network
+    
+  database:
+    container_name: database
+    image: postgres:latest
+    env_file:
+        - .env
+    environment:
+        - POSTGRES_DB=${DB_NAME}
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - service-network
+
+volumes:
+  db_data:
+
+networks:
+  service-network:
+    driver: bridge
