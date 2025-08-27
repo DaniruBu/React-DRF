@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +21,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     ## apps
     'apps.accounts',
-    'apps.auth',
+    'apps.authenticate',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -34,6 +38,27 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_COOKIE': 'refresh_token',  # Название ключа в куки, в котором хранится refresh токен
+    'AUTH_COOKIE': 'access_token',  # Название ключа в куки, в котором хранится access токен
+    'AUTH_COOKIE_SECURE': False,  # Куки должны передаваться только по HTTPS (True для production)
+    'AUTH_COOKIE_HTTP_ONLY': True,  # Запрет доступа к куки через JavaScript
+    'ROTATE_REFRESH_TOKENS': True,  # Обновление refresh токена при замене access токена
+    'AUTH_COOKIE_SAMESITE': 'Strict', # Ограничение передачи куки при кросс-сайтовых запросах.
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'apps.authenticate.authenticate.CookieJWTAuthentication',
+    ],
+  }
 
 ROOT_URLCONF = 'config.urls'
 
@@ -105,5 +130,3 @@ STATIC_URL = 'static/'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = 'accounts.User'
