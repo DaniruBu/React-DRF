@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.utils.decorators import method_decorator
 from django.middleware import csrf
-from .utils import set_jwt_cookies, delete_jwt_cookies, enforce_csrf
+from .utils import set_jwt_cookies, delete_jwt_cookies, delete_csrf_cookie, enforce_csrf
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
@@ -71,7 +71,7 @@ class CookieTokenLogoutView(TokenRefreshView):
         
         response = Response(status=status.HTTP_200_OK)
         response = delete_jwt_cookies(response)
-        csrf.get_token(request)
+        response = delete_csrf_cookie(response)
         
         return response
 
