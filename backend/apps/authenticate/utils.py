@@ -23,6 +23,17 @@ def delete_jwt_cookies(response):
     )
     return response
 
+def delete_csrf_cookie(response):
+    """
+    Удаляет CSRF токен из cookies
+    """
+    response.delete_cookie(
+        key='csrftoken',
+        path='/',
+        domain=None
+    )
+    return response
+
 def enforce_csrf(func):
     """
     Декоратор для принудительной проверки CSRF
