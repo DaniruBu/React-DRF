@@ -21,7 +21,7 @@ class RegisterUserView(APIView):
         user = serializer.save()
         user.is_active = False  
         user.save()
-        send_activation_email(user)
+        send_activation_email.delay(user.id)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ActivateUserView(APIView):
@@ -36,7 +36,7 @@ class ActivateUserView(APIView):
             if default_token_generator.check_token(user, token):
                 user.is_active = True
                 user.save()
-                send_welcome_email(user)
+                send_welcome_email.delay(user.id)
                 return Response({
                     'message': 'Аккаунт успешно активирован.'
                 }, status=status.HTTP_200_OK)
