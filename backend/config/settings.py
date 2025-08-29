@@ -143,3 +143,7 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 # Activation URL for email links
 ACTIVATE_URL = os.environ.get("ACTIVATE_URL", "http://localhost:8000/api/user/activate")
+
+# Celery Configuration
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://redis:6379/0')

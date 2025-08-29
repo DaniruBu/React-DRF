@@ -12,6 +12,7 @@ services:
     command: sh runserver.sh
     depends_on:
       - database
+      - redis
     restart: unless-stopped
     networks:
       - service-network
@@ -30,6 +31,27 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+    networks:
+      - service-network
+  
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - service-network
+  
+  celery:
+    container_name: celery
+    image: react-drf-backend
+    env_file:
+      - .env
+    command: celery -A celery_app worker --loglevel=info 
+    depends_on:
+      - redis
+      - database
     networks:
       - service-network
 
